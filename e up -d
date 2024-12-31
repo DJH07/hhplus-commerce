@@ -1,0 +1,17 @@
+[33mcommit e140ad153ae68bc4ce8cb0ffd52c4d5663f34e60[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: heojae <hubtwork@29cm.co.kr>
+Date:   Fri Dec 27 10:24:28 2024 +0900
+
+    [DOC] docker-compose 인프라 설명 추가
+
+[33mcommit 1fb65e374bf30dcd62c25f2e8ed545f322d979f2[m
+Author: heojae <hubtwork@29cm.co.kr>
+Date:   Fri Dec 27 10:13:01 2024 +0900
+
+    [INIT] java -> 17
+
+[33mcommit ebaf2cbaa75abd4c8809fa7d979b7334ec93716a[m
+Author: heojae <hubtwork@29cm.co.kr>
+Date:   Fri Dec 27 00:41:25 2024 +0900
+
+    [INIT] project setup

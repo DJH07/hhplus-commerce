@@ -1,5 +1,9 @@
 package kr.hhplus.be.commerce.interfaces.api;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import kr.hhplus.be.commerce.interfaces.dto.requestDto.CouponIssueRequest;
 import kr.hhplus.be.commerce.interfaces.dto.responseDto.CouponResponse;
@@ -14,11 +18,13 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/coupon")
+@RequestMapping("/api/v1/coupons")
 @RequiredArgsConstructor
 public class CouponController {
 
     // TODO: 선착순 쿠폰 발급 API
+    @Operation(summary = "선착순 쿠폰 발급", description = "선착순 쿠폰 발급하는 API", tags = {"쿠폰"})
+    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = ResponseDto.class)))
     @PostMapping("/issue")
     public ResponseEntity<?> issueCoupon(@Valid @RequestBody CouponIssueRequest request) {
         boolean isIssued = request.couponId() == 101 && request.userId() == 1; // 임의 로직
@@ -36,6 +42,8 @@ public class CouponController {
     }
 
     // TODO: 선착순 쿠폰 목록 조회 API
+    @Operation(summary = "선착순 쿠폰 목록 조회", description = "보유 쿠폰 정보 목록을 조회하는 API", tags = {"쿠폰"})
+    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CouponResponse.class)))
     @GetMapping("/{userId}/list")
     public ResponseEntity<?> getCouponList(@PathVariable Long userId) {
         if (userId <= 0) {

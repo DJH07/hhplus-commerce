@@ -1,5 +1,9 @@
 package kr.hhplus.be.commerce.interfaces.api;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import kr.hhplus.be.commerce.interfaces.dto.requestDto.ProductPageRequest;
 import kr.hhplus.be.commerce.interfaces.dto.responseDto.ProductResponse;
@@ -17,11 +21,13 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/product")
+@RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 public class ProductController {
 
     // TODO: 상품 목록 조회 API
+    @Operation(summary = "상품 목록 조회", description = "상품 정보 목록을 조회하는 API", tags = {"상품"})
+    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = ProductResponse.class)))
     @GetMapping("/list")
     public ResponseEntity<ResponseDto> list(@Valid @ModelAttribute ProductPageRequest request) {
         List<ProductResponse> products = List.of(
@@ -42,6 +48,8 @@ public class ProductController {
     }
 
     // TODO: 상위 주문 상품 조회 API
+    @Operation(summary = "상위 주문 상품 목록 조회", description = "근 3일간 가장 많이 팔린 상위 5개 상품 정보를 제공하는 API", tags = {"상품"})
+    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = ProductResponse.class)))
     @GetMapping("/top")
     public ResponseEntity<ResponseDto> top() {
         List<TopProductResponse> products = List.of(

@@ -20,6 +20,12 @@ spring:
     properties:
       hibernate.timezone.default_storage: NORMALIZE_UTC
       hibernate.jdbc.time_zone: UTC
+  springdoc:
+    api-docs:
+      enabled: true   # OpenAPI 문서 활성화
+    swagger-ui:
+      enabled: true   # Swagger UI 활성화
+      path: /swagger-ui.html  # Swagger UI 경로 (기본값은 swagger-ui.html)
 
 ---
 spring.config.activate.on-profile: local, test

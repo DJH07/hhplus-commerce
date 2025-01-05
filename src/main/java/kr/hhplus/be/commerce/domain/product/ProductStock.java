@@ -27,14 +27,14 @@ public class ProductStock extends AuditingFields implements Serializable {
 
     @Column(name = "remaining_stock", nullable = false)
     @Comment("잔여 재고 수량")
-    private Integer remainingStock;
+    private Long remainingStock;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName = "product_id", insertable = false, updatable = false)
     @Comment("상품")
     private Product product;
 
-    public static ProductStock create(Long productId, Integer remainingStock) {
+    public static ProductStock create(Long productId, Long remainingStock) {
         ProductStock entity = new ProductStock();
         entity.productId = productId;
         entity.remainingStock = remainingStock;

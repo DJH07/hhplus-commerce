@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "balance")
+@Table(name = "coupon")
 public class Coupon extends AuditingFields implements Serializable {
 
     @Id
@@ -26,17 +26,18 @@ public class Coupon extends AuditingFields implements Serializable {
     @Comment("유니크 쿠폰 코드")
     private String couponCode;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "discount_type", nullable = false)
     @Comment("할인 유형")
-    private String discountType;
+    private DiscountType discountType;
 
     @Column(name = "discount_value", nullable = false)
     @Comment("할인 값 (퍼센트 또는 고정 금액)")
-    private Integer discountValue;
+    private Long discountValue;
 
     @Column(name = "min_order_amount", nullable = false)
     @Comment("최소 주문 금액")
-    private Integer minOrderAmount;
+    private Long minOrderAmount;
 
     @Column(name = "start_date", nullable = false)
     @Comment("쿠폰 활성화 시작 날짜")
@@ -48,16 +49,16 @@ public class Coupon extends AuditingFields implements Serializable {
 
     @Column(name = "max_issued", nullable = false)
     @Comment("최대 발급 가능 수")
-    private Integer maxIssued;
+    private Long maxIssued;
 
     public static Coupon create(
             String couponCode,
-            String discountType,
-            Integer discountValue,
-            Integer minOrderAmount,
+            DiscountType discountType,
+            Long discountValue,
+            Long minOrderAmount,
             LocalDateTime startDate,
             LocalDateTime endDate,
-            Integer maxIssued
+            Long maxIssued
     ) {
         Coupon entity = new Coupon();
         entity.couponCode = couponCode;

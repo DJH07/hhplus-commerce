@@ -6,8 +6,8 @@ import lombok.Builder;
 public record TopProductResponse(
         Long id,
         String name,
-        Integer price,
+        Long price,
         String description,
-        Integer soldQuantity
+        Long soldQuantity
 ) {
 }

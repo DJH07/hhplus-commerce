@@ -27,9 +27,9 @@ public class CouponQuantity extends AuditingFields implements Serializable {
 
     @Column(name = "remaining_quantity", nullable = false)
     @Comment("남은 쿠폰 수량")
-    private Integer remainingQuantity;
+    private Long remainingQuantity;
 
-    public static CouponQuantity create(Long couponId, Integer remainingQuantity) {
+    public static CouponQuantity create(Long couponId, Long remainingQuantity) {
         CouponQuantity entity = new CouponQuantity();
         entity.couponId = couponId;
         entity.remainingQuantity = remainingQuantity;

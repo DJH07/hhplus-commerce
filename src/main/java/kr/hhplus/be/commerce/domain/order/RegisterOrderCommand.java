@@ -1,4 +1,4 @@
-package kr.hhplus.be.commerce.app.dto;
+package kr.hhplus.be.commerce.domain.order;
 
 public record RegisterOrderCommand(Long userId,
                                    Long orderTotalAmount,

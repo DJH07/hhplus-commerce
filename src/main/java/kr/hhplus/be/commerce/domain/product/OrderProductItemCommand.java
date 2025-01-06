@@ -1,4 +1,4 @@
-package kr.hhplus.be.commerce.app.dto;
+package kr.hhplus.be.commerce.domain.product;
 
 import lombok.Builder;
 

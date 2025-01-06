@@ -1,6 +1,5 @@
 package kr.hhplus.be.commerce.domain.order;
 
-import kr.hhplus.be.commerce.app.dto.RegisterOrderCommand;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,6 @@
 package kr.hhplus.be.commerce.app;
 
 import kr.hhplus.be.commerce.domain.product.ProductService;
-import kr.hhplus.be.commerce.interfaces.dto.requestDto.ProductPageRequest;
 import kr.hhplus.be.commerce.interfaces.dto.responseDto.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Description;
@@ -15,7 +14,7 @@ public class ProductFacade {
     private final ProductService productService;
 
     @Description("상품 조회")
-    public Page<ProductResponse> getProductPage(ProductPageRequest request) {
+    public Page<ProductResponse> getProductPage(Integer size, Integer page) {
         return null;
     }
 }

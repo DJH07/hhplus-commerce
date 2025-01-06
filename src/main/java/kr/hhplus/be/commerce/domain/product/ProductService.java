@@ -1,8 +1,5 @@
 package kr.hhplus.be.commerce.domain.product;
 
-import kr.hhplus.be.commerce.app.dto.OrderProductItemCommand;
-import kr.hhplus.be.commerce.app.dto.OrderProductItemResult;
-import kr.hhplus.be.commerce.app.dto.OrderProductResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

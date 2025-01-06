@@ -53,11 +53,11 @@ public class ProductController {
     @GetMapping("/top")
     public ResponseEntity<ResponseDto> top() {
         List<TopProductResponse> products = List.of(
-                new TopProductResponse(1L, "상품1", 5000, "상품 설명", 150),
-                new TopProductResponse(2L, "상품2", 3000, "상품 설명 2", 120),
-                new TopProductResponse(3L, "상품3", 2000, "상품 설명 3", 100),
-                new TopProductResponse(4L, "상품4", 7000, "상품 설명 4", 80),
-                new TopProductResponse(5L, "상품5", 4000, "상품 설명 5", 70)
+                new TopProductResponse(1L, "상품1", 5000L, "상품 설명", 150L),
+                new TopProductResponse(2L, "상품2", 3000L, "상품 설명 2", 120L),
+                new TopProductResponse(3L, "상품3", 2000L, "상품 설명 3", 100L),
+                new TopProductResponse(4L, "상품4", 7000L, "상품 설명 4", 80L),
+                new TopProductResponse(5L, "상품5", 4000L, "상품 설명 5", 70L)
         );
 
         ResponseDto responseDto = ResponseDto.builder()

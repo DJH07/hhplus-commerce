@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import kr.hhplus.be.commerce.interfaces.dto.requestDto.CouponIssueRequest;
-import kr.hhplus.be.commerce.interfaces.dto.responseDto.CouponResponse;
+import kr.hhplus.be.commerce.app.dto.CouponResponse;
 import kr.hhplus.be.commerce.interfaces.dto.responseDto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -56,8 +56,8 @@ public class CouponController {
                         101L,
                         "할인 쿠폰",
                         "10% 할인",
-                        LocalDate.of(2025, 1, 1),
-                        LocalDate.of(2025, 1, 31),
+                        LocalDate.of(2025, 1, 1).atStartOfDay(),
+                        LocalDate.of(2025, 1, 31).atStartOfDay(),
                         "발급 완료"
                 )
         );

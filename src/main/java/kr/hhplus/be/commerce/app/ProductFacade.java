@@ -1,7 +1,7 @@
 package kr.hhplus.be.commerce.app;
 
 import kr.hhplus.be.commerce.domain.product.ProductService;
-import kr.hhplus.be.commerce.interfaces.dto.responseDto.ProductResponse;
+import kr.hhplus.be.commerce.app.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.domain.Page;

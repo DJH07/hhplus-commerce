@@ -23,8 +23,16 @@ public class Coupon extends AuditingFields implements Serializable {
     private Long couponId;
 
     @Column(name = "coupon_code", nullable = false, unique = true, length = 100)
-    @Comment("유니크 쿠폰 코드")
+    @Comment("쿠폰 코드")
     private String couponCode;
+
+    @Column(name = "coupon_name", nullable = false)
+    @Comment("쿠폰명")
+    private String couponName;
+
+    @Column(name = "description", nullable = false)
+    @Comment("세부설명")
+    private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "discount_type", nullable = false)
@@ -53,6 +61,8 @@ public class Coupon extends AuditingFields implements Serializable {
 
     public static Coupon create(
             String couponCode,
+            String couponName,
+            String description,
             DiscountType discountType,
             Long discountValue,
             Long minOrderAmount,
@@ -62,6 +72,8 @@ public class Coupon extends AuditingFields implements Serializable {
     ) {
         Coupon entity = new Coupon();
         entity.couponCode = couponCode;
+        entity.couponName = couponName;
+        entity.description = description;
         entity.discountType = discountType;
         entity.discountValue = discountValue;
         entity.minOrderAmount = minOrderAmount;

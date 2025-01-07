@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -65,5 +66,9 @@ public class CouponService {
                 UserCouponStatus.ISSUED,
                 LocalDateTime.now());
         return userCouponRepository.save(userCoupon);
+    }
+
+    public List<CouponResult> getUserCouponList(Long userId) {
+        return userCouponRepository.findAllByUserId(userId);
     }
 }

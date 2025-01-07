@@ -38,16 +38,24 @@ public class Product extends AuditingFields implements Serializable {
     @Comment("상품 설명")
     private String description;
 
-    public static Product create(String name, Long price, ProductStatus status, String description) {
+    @Column(name = "stock", nullable = false)
+    @Comment("상품 가격")
+    private Long stock;
+
+    public static Product create(String name, Long price, ProductStatus status, String description, Long stock) {
         Product entity = new Product();
         entity.name = name;
         entity.price = price;
         entity.status = status;
         entity.description = description;
+        entity.stock = stock;
         return entity;
     }
 
     public void changeStatus(ProductStatus status) {
         this.status = status;
+    }
+    public void changeStock(Long stock) {
+        this.stock = stock;
     }
 }

@@ -1,6 +1,10 @@
 package kr.hhplus.be.commerce.domain.product;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +20,7 @@ public class ProductService {
             Product product = productRepository.findById(command.productId());
 
             Long remainingStock = productRepository.decreaseStockWithLock(product.getProductId(), command.quantity());
+            product.changeStock(remainingStock);
             if(remainingStock < 1) {
                 product.changeStatus(ProductStatus.TEMPORARILY_OUT_OF_STOCK);
             }
@@ -37,4 +42,8 @@ public class ProductService {
     }
 
 
+    public Page<ProductResult> getProductPage(Integer size, Integer page) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "productId"));
+        return productRepository.findAllProductResults(pageable);
+    }
 }

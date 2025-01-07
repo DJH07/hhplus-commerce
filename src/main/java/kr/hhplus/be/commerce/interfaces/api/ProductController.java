@@ -31,8 +31,8 @@ public class ProductController {
     @GetMapping("/list")
     public ResponseEntity<ResponseDto> list(@Valid @ModelAttribute ProductPageRequest request) {
         List<ProductResponse> products = List.of(
-                new ProductResponse(1L, "상품1", 5000, "상품 설명", 100),
-                new ProductResponse(2L, "상품2", 3000, "상품 설명 2", 200)
+                new ProductResponse(1L, "상품1", 5000L, "상품 설명", 100L),
+                new ProductResponse(2L, "상품2", 3000L, "상품 설명 2", 200L)
         );
         Map<String, Object> data = Map.of(
                 "data", products,

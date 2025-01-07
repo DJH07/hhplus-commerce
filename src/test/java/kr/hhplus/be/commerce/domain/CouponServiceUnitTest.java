@@ -21,7 +21,13 @@ import static org.mockito.Mockito.when;
 class CouponServiceUnitTest {
 
     @Mock
+    private CouponRepository couponRepository;
+
+    @Mock
     private UserCouponRepository userCouponRepository;
+
+    @Mock
+    private CouponQuantityRepository couponQuantityRepository;
 
     @InjectMocks
     private CouponService couponService;
@@ -115,6 +121,40 @@ class CouponServiceUnitTest {
         assertEquals(BusinessErrorCode.COUPON_EXPIRED, exception.getErrorCode());
     }
 
+    @Test
+    @DisplayName("쿠폰이 만료된 경우 COUPON_EXPIRED 예외 발생")
+    void validateCouponExpiration_ShouldThrowException_WhenCouponExpired() {
+        // given
+        final Long couponId = 1L;
+        Coupon coupon = mock(Coupon.class);
+        when(coupon.getEndDate()).thenReturn(LocalDateTime.now().minusDays(1)); // 현재 시간보다 이전
 
+        when(couponRepository.findById(couponId)).thenReturn(coupon);
+
+        // when
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> couponService.validateCouponExpiration(couponId));
+
+        // then
+        assertEquals(BusinessErrorCode.COUPON_EXPIRED, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("쿠폰 재고가 부족한 경우 OUT_OF_COUPONS 예외 발생")
+    void updateCouponQuantity_ShouldThrowException_WhenOutOfCoupons() {
+        // given
+        final Long couponId = 1L;
+        CouponQuantity couponQuantity = mock(CouponQuantity.class);
+        when(couponQuantity.getRemainingQuantity()).thenReturn(0L); // 재고 0
+
+        when(couponQuantityRepository.findByIdWithLock(couponId)).thenReturn(couponQuantity);
+
+        // when
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> couponService.updateCouponQuantity(couponId));
+
+        // then
+        assertEquals(BusinessErrorCode.OUT_OF_COUPONS, exception.getErrorCode());
+    }
 
 }

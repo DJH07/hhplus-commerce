@@ -18,4 +18,9 @@ public class UserCouponRepositoryImpl implements UserCouponRepository {
         return userCouponJpaRepository.findById(userCouponId)
                 .orElseThrow(() -> new BusinessException(BusinessErrorCode.USER_COUPON_NOT_FOUND));
     }
+
+    @Override
+    public Long save(UserCoupon userCoupon) {
+        return userCouponJpaRepository.save(userCoupon).getCouponId();
+    }
 }

@@ -35,4 +35,8 @@ public class CouponQuantity extends AuditingFields implements Serializable {
         entity.remainingQuantity = remainingQuantity;
         return entity;
     }
+
+    public void changeRemainingQuantity(Long remainingQuantity) {
+        this.remainingQuantity = remainingQuantity;
+    }
 }

@@ -4,6 +4,7 @@ import kr.hhplus.be.commerce.domain.error.BusinessErrorCode;
 import kr.hhplus.be.commerce.domain.error.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 public class CouponService {
 
     private final CouponRepository couponRepository;
+    private final CouponQuantityRepository couponQuantityRepository;
     private final UserCouponRepository userCouponRepository;
 
     public Long applyCoupon(Long userCouponId, Long amount) {
@@ -37,5 +39,31 @@ public class CouponService {
             case PERCENTAGE -> amount * (100 - coupon.getDiscountValue()) / 100;
             case AMOUNT -> amount - coupon.getDiscountValue();
         };
+    }
+
+    public void validateCouponExpiration(Long couponId) {
+        Coupon coupon = couponRepository.findById(couponId);
+        if(coupon.getEndDate().isBefore(LocalDateTime.now())) {
+            throw new BusinessException(BusinessErrorCode.COUPON_EXPIRED);
+        }
+    }
+
+    @Transactional
+    public void updateCouponQuantity(Long couponId) {
+        CouponQuantity couponQuantity = couponQuantityRepository.findByIdWithLock(couponId);
+        long decrementedQuantity = couponQuantity.getRemainingQuantity() - 1;
+        if(decrementedQuantity < 0) {
+            throw new BusinessException(BusinessErrorCode.OUT_OF_COUPONS);
+        }
+        couponQuantity.changeRemainingQuantity(decrementedQuantity);
+    }
+
+    public Long issueUserCoupon(Long userId, Long couponId) {
+        UserCoupon userCoupon = UserCoupon.create(
+                userId,
+                couponId,
+                UserCouponStatus.ISSUED,
+                LocalDateTime.now());
+        return userCouponRepository.save(userCoupon);
     }
 }

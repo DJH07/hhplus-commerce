@@ -58,6 +58,7 @@ public class CouponController {
                         "10% 할인",
                         LocalDate.of(2025, 1, 1).atStartOfDay(),
                         LocalDate.of(2025, 1, 31).atStartOfDay(),
+                        LocalDate.of(2025, 1, 1).atStartOfDay(),
                         "발급 완료"
                 )
         );

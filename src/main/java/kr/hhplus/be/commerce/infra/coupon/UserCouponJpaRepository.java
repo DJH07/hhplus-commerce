@@ -21,7 +21,7 @@ public interface UserCouponJpaRepository extends JpaRepository<UserCoupon, Long>
             "uc.status" +
             ")" +
             "from UserCoupon uc " +
-            "join uc.coupon c " +
+            "join Coupon c on uc.couponId = c.couponId " +
             "where uc.userId = :userId " +
             "order by uc.issuedAt desc")
     List<CouponResult> findAllByUserId(@Param("userId") Long userId);

@@ -43,10 +43,6 @@ public class UserCoupon extends AuditingFields implements Serializable {
     @Comment("쿠폰 사용 일시")
     private LocalDateTime usedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "coupon_id", referencedColumnName = "coupon_id", insertable = false, updatable = false)
-    @Comment("쿠폰")
-    private Coupon coupon;
 
     public static UserCoupon create(
             Long userId,
@@ -60,5 +56,9 @@ public class UserCoupon extends AuditingFields implements Serializable {
         entity.status = status;
         entity.issuedAt = issuedAt;
         return entity;
+    }
+
+    public void changeStatus(UserCouponStatus status) {
+        this.status = status;
     }
 }

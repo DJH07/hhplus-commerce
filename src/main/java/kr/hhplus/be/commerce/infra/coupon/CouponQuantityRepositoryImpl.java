@@ -18,7 +18,7 @@ public class CouponQuantityRepositoryImpl implements CouponQuantityRepository {
     public CouponQuantity findByIdWithLock(Long couponId) {
         try {
             return couponQuantityJpaRepository.findByCouponIdWithLock(couponId)
-                    .orElseThrow(() -> new BusinessException(BusinessErrorCode.NOT_FOUND_COUPON_QUANTITY));
+                    .orElseThrow(() -> new BusinessException(BusinessErrorCode.COUPON_QUANTITY_NOT_FOUND));
         } catch (LockTimeoutException e) {
             throw new BusinessException(BusinessErrorCode.LOCK_TIMEOUT);
         }

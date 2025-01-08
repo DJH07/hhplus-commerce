@@ -17,9 +17,25 @@ public class CouponService {
     private final CouponQuantityRepository couponQuantityRepository;
     private final UserCouponRepository userCouponRepository;
 
-    public Long applyCoupon(Long userCouponId, Long amount) {
+    public Long applyUserCoupon(Long userCouponId, Long amount) {
+        if(userCouponId == null) {
+            return amount;
+        }
+
         UserCoupon userCoupon = userCouponRepository.findById(userCouponId);
-        Coupon coupon = userCoupon.getCoupon();
+        Coupon coupon = couponRepository.findById(userCoupon.getCouponId());
+        userCoupon.changeStatus(UserCouponStatus.USED);
+
+        validateUserCoupon(userCoupon, coupon, amount);
+
+        // 쿠폰 연산
+        return switch (coupon.getDiscountType()) {
+            case PERCENTAGE -> amount * (100 - coupon.getDiscountValue()) / 100;
+            case AMOUNT -> amount - coupon.getDiscountValue();
+        };
+    }
+
+    private void validateUserCoupon(UserCoupon userCoupon, Coupon coupon, Long amount) {
 
         // 쿠폰 가능 조건 검사
         if(userCoupon.getStatus().equals(UserCouponStatus.USED)) {
@@ -35,12 +51,8 @@ public class CouponService {
             throw new BusinessException(BusinessErrorCode.COUPON_EXPIRED);
         }
 
-        // 쿠폰 연산
-        return switch (coupon.getDiscountType()) {
-            case PERCENTAGE -> amount * (100 - coupon.getDiscountValue()) / 100;
-            case AMOUNT -> amount - coupon.getDiscountValue();
-        };
     }
+
 
     public void validateCouponExpiration(Long couponId) {
         Coupon coupon = couponRepository.findById(couponId);
@@ -71,4 +83,5 @@ public class CouponService {
     public List<CouponResult> getUserCouponList(Long userId) {
         return userCouponRepository.findAllByUserId(userId);
     }
+
 }

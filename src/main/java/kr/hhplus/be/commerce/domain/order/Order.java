@@ -35,7 +35,7 @@ public class Order extends AuditingFields implements Serializable {
     @Comment("총 주문 금액 (쿠폰 적용 이전가)")
     private Long orderTotalAmount;
 
-    @Column(name = "pay_total_amount", nullable = false)
+    @Column(name = "pay_total_amount")
     @Comment("총 결제 금액 (쿠폰 적용가)")
     private Long payTotalAmount;
 
@@ -48,14 +48,25 @@ public class Order extends AuditingFields implements Serializable {
     private LocalDateTime payDate;
 
 
-    public static Order create(Long userId, Long orderTotalAmount, Long payTotalAmount, LocalDateTime orderDate) {
+    public static Order create(Long userId, Long orderTotalAmount, LocalDateTime orderDate) {
         Order entity = new Order();
         entity.userId = userId;
         entity.status = OrderStatus.PENDING;
         entity.orderTotalAmount = orderTotalAmount;
-        entity.payTotalAmount = payTotalAmount;
         entity.orderDate = orderDate;
         return entity;
+    }
+
+    public void changeStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public void changePayTotalAmount(Long payTotalAmount) {
+        this.payTotalAmount = payTotalAmount;
+    }
+
+    public void changePayDate(LocalDateTime payDate) {
+        this.payDate = payDate;
     }
 
 }

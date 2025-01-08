@@ -25,8 +25,7 @@ public class BalanceService {
         return balance.getBalanceId();
     }
 
-    @Transactional
-    public Long deductBalance(Long userId, Long amount) {
+    public void reduceBalance(Long userId, Long amount) {
         Balance balance = balanceRepository.findByUserId(userId);
 
         if(balance.getAmount() < amount) {
@@ -34,8 +33,6 @@ public class BalanceService {
         }
 
         balance.changeAmount(balance.getAmount() - amount);
-
-        return balance.getBalanceId();
     }
 
     public Long getBalanceAmount(Long userId) {

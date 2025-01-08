@@ -34,29 +34,15 @@ public class OrderItem extends AuditingFields implements Serializable {
     private Long quantity;
 
     @Column(name = "price", nullable = false)
-    @Comment("상품 주문 당시 가격")
+    @Comment("상품 주문")
     private Long price;
 
-    @Column(name = "total_price", nullable = false)
-    @Comment("주문 항목 총 금액")
-    private Long totalPrice;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", referencedColumnName = "order_id", nullable = false)
-    @Comment("주문")
-    private Order order;
-
-    public static OrderItem create(Long productId, Long quantity, Long price, Long totalPrice) {
+    public static OrderItem create(Long productId, Long quantity, Long price) {
         OrderItem entity = new OrderItem();
         entity.productId = productId;
         entity.quantity = quantity;
         entity.price = price;
-        entity.totalPrice = totalPrice;
         return entity;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
-        this.orderId = order.getOrderId();
-    }
 }

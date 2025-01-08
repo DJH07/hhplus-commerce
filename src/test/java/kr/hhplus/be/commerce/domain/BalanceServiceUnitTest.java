@@ -46,7 +46,7 @@ class BalanceServiceUnitTest {
 
     @Test
     @DisplayName("잔액 차감 시 잔고가 부족한 경우 INSUFFICIENT_BALANCE 발생")
-    void deductBalance_ShouldThrowException_WhenInsufficientBalance() {
+    void reduceBalance_ShouldThrowException_WhenInsufficientBalance() {
         // given
         final long userId = 1;
         final long amount = 1000;
@@ -57,7 +57,7 @@ class BalanceServiceUnitTest {
 
         // when & then
         BusinessException exception = assertThrows(BusinessException.class,
-                () -> balanceService.deductBalance(userId, amount)
+                () -> balanceService.reduceBalance(userId, amount)
         );
 
         // then

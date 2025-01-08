@@ -1,9 +1,9 @@
-package kr.hhplus.be.commerce.app.dto;
+package kr.hhplus.be.commerce.domain.product;
 
 import lombok.Builder;
 
 @Builder
-public record TopProductResponse(
+public record TopProductResult(
         Long productId,
         String name,
         Long price,

@@ -15,8 +15,8 @@ public class PaymentService {
     private final PaymentDataPlatform paymentDataPlatform;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public PaymentStatus processPayment(Long orderId, Long amount) {
-        PaymentRequest request = new PaymentRequest(orderId, amount);
+    public PaymentStatus processPayment(Long orderId, Long amount, boolean isFail) {
+        PaymentRequest request = new PaymentRequest(orderId, amount, isFail);
         PaymentResponse response = paymentDataPlatform.sendPaymentData(request);
 
         registerPayment(request, response);

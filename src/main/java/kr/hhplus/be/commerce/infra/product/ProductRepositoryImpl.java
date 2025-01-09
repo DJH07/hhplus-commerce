@@ -43,9 +43,10 @@ public class ProductRepositoryImpl implements ProductRepository {
         return productJpaRepository.findAllProductResults(pageable);
     }
 
+    //FIXME : 현재 상태에서는 데이터가 많아지면 성능상 무리가 간다. 추후 고도화 예정.
     @Override
     public List<TopProductResult> getTopProductResults() {
-        int SIZE = 5;
+        final int SIZE = 5;
         OrderStatus status = OrderStatus.PAID;
         LocalDate today = LocalDate.now();
         LocalDateTime startDate = today.minusDays(3).atStartOfDay();

@@ -15,6 +15,8 @@ public class CouponFacade {
     private final CouponService couponService;
     private final UserService userService;
 
+    // FIXME : 쿠폰 서비스의 메서드 하나로 통합 (쿠폰 서비스 내 통합 메서드 만들고, 내부에 세 메서드 넣기)
+    // 통합하면서 트랜잭션 레벨 고려
     public Long issueCoupon(Long userId, Long couponId) {
 
         userService.checkUserExists(userId);

@@ -13,6 +13,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CouponService {
 
+    // TODO : Coupon, UserCoupon 서비스 분리 고려.
+
     private final CouponRepository couponRepository;
     private final CouponQuantityRepository couponQuantityRepository;
     private final UserCouponRepository userCouponRepository;

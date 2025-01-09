@@ -25,6 +25,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class OrderFacade {
 
+    // TODO : 현 OrderFacade의 책임이 크다. 추후 책임 분리 고려.
+
     private final OrderService orderService;
     private final UserService userService;
     private final ProductService productService;
@@ -51,8 +53,11 @@ public class OrderFacade {
 
     }
 
+    // FIXME : isFail 패러미터는 결제 실패 테스트용 패러미터. 추후 제거
     @Transactional
-    public PaymentStatus payment(Long orderId, Long userCouponId) {
+    public PaymentStatus payment(Long orderId, Long userCouponId, boolean isFail) {
+
+        // TODO : 일정 시간 지난 주문 만료 처리
 
         // 주문 정보 조회
         OrderResult order = orderService.getOrderResult(orderId);
@@ -64,7 +69,7 @@ public class OrderFacade {
         balanceService.reduceBalance(order.userId(), payTotalAmount);
 
         // 결제 시도
-        PaymentStatus paymentStatus = paymentService.processPayment(orderId, payTotalAmount);
+        PaymentStatus paymentStatus = paymentService.processPayment(orderId, payTotalAmount, isFail);
 
         if (Objects.requireNonNull(paymentStatus).equals(PaymentStatus.SUCCESS)) {
             orderService.successOrder(orderId, payTotalAmount);

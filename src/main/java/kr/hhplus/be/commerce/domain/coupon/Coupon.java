@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @Table(name = "coupon")
 public class Coupon extends AuditingFields implements Serializable {
 
+    // TODO : 만료 날짜가 지난 쿠폰은 만료 상태가 되도록 처리
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "coupon_id", nullable = false)

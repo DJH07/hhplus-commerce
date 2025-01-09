@@ -3,12 +3,16 @@ package kr.hhplus.be.commerce.infra.product;
 import jakarta.persistence.LockTimeoutException;
 import kr.hhplus.be.commerce.domain.error.BusinessErrorCode;
 import kr.hhplus.be.commerce.domain.error.BusinessException;
+import kr.hhplus.be.commerce.domain.order.OrderStatus;
 import kr.hhplus.be.commerce.domain.product.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -42,7 +46,13 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public List<TopProductResult> getTopProductResults() {
         int SIZE = 5;
-        return null;
+        OrderStatus status = OrderStatus.PAID;
+        LocalDate today = LocalDate.now();
+        LocalDateTime startDate = today.minusDays(3).atStartOfDay();
+        LocalDateTime endDate = today.atStartOfDay().minusNanos(1);
+        Pageable pageable = PageRequest.of(0, SIZE);
+
+        return productJpaRepository.findTopProducts(status, startDate, endDate, pageable);
     }
 
 

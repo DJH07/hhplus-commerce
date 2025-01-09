@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProductJpaRepository extends JpaRepository<Product, Long> {
@@ -29,10 +30,16 @@ public interface ProductJpaRepository extends JpaRepository<Product, Long> {
             "p.name, " +
             "p.price, " +
             "p.description, " +
-            "p.stock) " +
+            "SUM(oi.quantity)) " +
             "from Product p " +
             "left join OrderItem oi on oi.productId = p.productId " +
             "left join Order o on o.orderId = oi.orderId " +
-            "where o.status = :status")
-    List<TopProductResult> findTopProducts(@Param("status") OrderStatus status, Pageable pageable);
+            "where o.status = :status " +
+            "and o.payDate between :startDate and :endDate " +
+            "group by p.productId " +
+            "order by SUM(oi.quantity) desc")
+    List<TopProductResult> findTopProducts(@Param("status") OrderStatus status,
+                                           @Param("startDate") LocalDateTime startDate,
+                                           @Param("endDate") LocalDateTime endDate,
+                                           Pageable pageable);
 }

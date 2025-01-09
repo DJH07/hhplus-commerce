@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 @RequiredArgsConstructor
@@ -33,10 +34,13 @@ public class ProductFacade {
     @Description("주문 상위 상품 조회")
     public List<TopProductResponse> getTopProductList() {
 
+        AtomicInteger rankCounter = new AtomicInteger(1);
+
         return productService.getTopProductList()
                 .stream()
                 .map(result -> new TopProductResponse(
                         result.productId(),
+                        rankCounter.getAndIncrement(),
                         result.name(),
                         result.price(),
                         result.description(),

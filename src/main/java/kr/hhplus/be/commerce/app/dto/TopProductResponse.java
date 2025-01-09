@@ -5,6 +5,7 @@ import lombok.Builder;
 @Builder
 public record TopProductResponse(
         Long productId,
+        Integer rank,
         String name,
         Long price,
         String description,

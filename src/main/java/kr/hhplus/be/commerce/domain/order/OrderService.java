@@ -27,6 +27,7 @@ public class OrderService {
         List<OrderItem> orderItemList = new ArrayList<>();
         for(OrderProductItemResult item : command.orderProductItemResults()) {
             OrderItem orderItem = OrderItem.create(
+                    orderId,
                     item.productId(),
                     item.quantity(),
                     item.totalPrice());
@@ -42,7 +43,7 @@ public class OrderService {
 
         List<OrderItemResult> items = orderItemRepository.findAllByOrderId(order.getOrderId());
 
-        return new OrderResult(order.getPayTotalAmount(), order.getUserId(), items);
+        return new OrderResult(order.getOrderTotalAmount(), order.getUserId(), items);
     }
 
     public void successOrder(Long orderId, Long amount) {

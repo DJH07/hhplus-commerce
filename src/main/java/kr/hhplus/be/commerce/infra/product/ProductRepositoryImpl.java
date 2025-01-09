@@ -19,8 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductRepositoryImpl implements ProductRepository {
 
-    private ProductJpaRepository productJpaRepository;
-    private ProductStockJpaRepository productStockJpaRepository;
+    private final ProductJpaRepository productJpaRepository;
+    private final ProductStockJpaRepository productStockJpaRepository;
 
     @Override
     public Product findById(Long productId) {

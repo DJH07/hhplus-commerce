@@ -57,11 +57,11 @@ public class OrderFacade {
         // 주문 정보 조회
         OrderResult order = orderService.getOrderResult(orderId);
 
-        // 사용자 잔액 확인 요청 및 차감
-        balanceService.reduceBalance(order.userId(), order.payTotalAmount());
-
         // 쿠폰 사용 시, 쿠폰 유효성 검증 및 쿠폰 상태 변경 후 유효 쿠폰 결과 반환
-        Long payTotalAmount = couponService.applyUserCoupon(userCouponId, order.payTotalAmount());
+        Long payTotalAmount = couponService.applyUserCoupon(userCouponId, order.totalAmount());
+
+        // 사용자 잔액 확인 요청 및 차감
+        balanceService.reduceBalance(order.userId(), payTotalAmount);
 
         // 결제 시도
         PaymentStatus paymentStatus = paymentService.processPayment(orderId, payTotalAmount);

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "order")
+@Table(name = "order_info")
 public class Order extends AuditingFields implements Serializable {
 
     @Id

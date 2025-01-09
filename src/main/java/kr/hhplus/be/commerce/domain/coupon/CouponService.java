@@ -24,9 +24,10 @@ public class CouponService {
 
         UserCoupon userCoupon = userCouponRepository.findById(userCouponId);
         Coupon coupon = couponRepository.findById(userCoupon.getCouponId());
-        userCoupon.changeStatus(UserCouponStatus.USED);
 
         validateUserCoupon(userCoupon, coupon, amount);
+
+        userCoupon.changeStatus(UserCouponStatus.USED);
 
         // 쿠폰 연산
         return switch (coupon.getDiscountType()) {

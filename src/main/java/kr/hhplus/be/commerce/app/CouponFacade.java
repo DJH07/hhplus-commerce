@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -41,9 +40,9 @@ public class CouponFacade {
                         .validFrom(couponResult.validFrom())
                         .validTo(couponResult.validTo())
                         .issuedAt(couponResult.issuedAt())
-                        .status(couponResult.status().name())  // UserCouponStatus의 name을 사용
+                        .status(couponResult.status().name())
                         .build())
-                .collect(Collectors.toList());
+                .toList();
 
     }
 }

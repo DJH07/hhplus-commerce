@@ -6,7 +6,7 @@ import java.util.List;
 
 @Builder
 public record OrderResult(
-        Long payTotalAmount,
+        Long totalAmount,
         Long userId,
         List<OrderItemResult> itemResultList
 ) {

@@ -21,7 +21,7 @@ public class OrderItem extends AuditingFields implements Serializable {
     @Comment("주문 항목 ID")
     private Long orderItemId;
 
-    @Column(name = "order_id", nullable = false, insertable = false, updatable = false)
+    @Column(name = "order_id", nullable = false, updatable = false)
     @Comment("주문 ID")
     private Long orderId;
 
@@ -37,8 +37,9 @@ public class OrderItem extends AuditingFields implements Serializable {
     @Comment("상품 주문")
     private Long price;
 
-    public static OrderItem create(Long productId, Long quantity, Long price) {
+    public static OrderItem create(Long orderId, Long productId, Long quantity, Long price) {
         OrderItem entity = new OrderItem();
+        entity.orderId = orderId;
         entity.productId = productId;
         entity.quantity = quantity;
         entity.price = price;

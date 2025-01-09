@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserCouponRepositoryImpl implements UserCouponRepository {
 
-    private UserCouponJpaRepository userCouponJpaRepository;
+    private final UserCouponJpaRepository userCouponJpaRepository;
 
     @Override
     public UserCoupon findById(Long userCouponId) {

@@ -8,4 +8,4 @@
 - [API 명세서](https://docs.google.com/spreadsheets/d/e/2PACX-1vQL6blIp0fkdmbQzOH1T6f9qmXZRn9K5cPZW8VOP2oVvD4vTvuEPQ4oVSgJNTyOWS8oVLoIUWLeuTNo/pubhtml?gid=1069311177&single=true)
 
 - Swagger
-![Uploading screencapture-localhost-8080-swagger-ui-index-html-2025-01-10-07_51_38.png…]()
+![swagger](https://github.com/user-attachments/assets/d17db5b6-6ea0-450e-9cdc-f6e9a33efa77)

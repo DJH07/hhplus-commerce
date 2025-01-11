@@ -13,8 +13,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "balance")
+@Table(name = "coupon")
 public class Coupon extends AuditingFields implements Serializable {
+
+    // TODO : 만료 날짜가 지난 쿠폰은 만료 상태가 되도록 처리
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,20 +25,29 @@ public class Coupon extends AuditingFields implements Serializable {
     private Long couponId;
 
     @Column(name = "coupon_code", nullable = false, unique = true, length = 100)
-    @Comment("유니크 쿠폰 코드")
+    @Comment("쿠폰 코드")
     private String couponCode;
 
+    @Column(name = "coupon_name", nullable = false)
+    @Comment("쿠폰명")
+    private String couponName;
+
+    @Column(name = "description", nullable = false)
+    @Comment("세부설명")
+    private String description;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "discount_type", nullable = false)
     @Comment("할인 유형")
-    private String discountType;
+    private DiscountType discountType;
 
     @Column(name = "discount_value", nullable = false)
     @Comment("할인 값 (퍼센트 또는 고정 금액)")
-    private Integer discountValue;
+    private Long discountValue;
 
     @Column(name = "min_order_amount", nullable = false)
     @Comment("최소 주문 금액")
-    private Integer minOrderAmount;
+    private Long minOrderAmount;
 
     @Column(name = "start_date", nullable = false)
     @Comment("쿠폰 활성화 시작 날짜")
@@ -48,19 +59,23 @@ public class Coupon extends AuditingFields implements Serializable {
 
     @Column(name = "max_issued", nullable = false)
     @Comment("최대 발급 가능 수")
-    private Integer maxIssued;
+    private Long maxIssued;
 
     public static Coupon create(
             String couponCode,
-            String discountType,
-            Integer discountValue,
-            Integer minOrderAmount,
+            String couponName,
+            String description,
+            DiscountType discountType,
+            Long discountValue,
+            Long minOrderAmount,
             LocalDateTime startDate,
             LocalDateTime endDate,
-            Integer maxIssued
+            Long maxIssued
     ) {
         Coupon entity = new Coupon();
         entity.couponCode = couponCode;
+        entity.couponName = couponName;
+        entity.description = description;
         entity.discountType = discountType;
         entity.discountValue = discountValue;
         entity.minOrderAmount = minOrderAmount;

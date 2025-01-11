@@ -27,12 +27,16 @@ public class Balance extends AuditingFields implements Serializable {
 
     @Column(name = "amount", nullable = false)
     @Comment("금액")
-    private Integer amount;
+    private Long amount;
 
-    public static Balance create(Long userId, Integer amount) {
+    public static Balance create(Long userId, Long amount) {
         Balance entity = new Balance();
         entity.userId = userId;
         entity.amount = amount;
         return entity;
+    }
+
+    public void changeAmount(Long amount) {
+        this.amount = amount;
     }
 }

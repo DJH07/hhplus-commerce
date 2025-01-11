@@ -1,9 +1,10 @@
 package kr.hhplus.be.commerce.infra.balance;
 
-import jakarta.transaction.Transactional;
 import kr.hhplus.be.commerce.domain.balance.Balance;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-@Transactional
+import java.util.Optional;
+
 public interface BalanceJpaRepository extends JpaRepository<Balance, Long> {
+    Optional<Balance> findByUserId(Long userId);
 }

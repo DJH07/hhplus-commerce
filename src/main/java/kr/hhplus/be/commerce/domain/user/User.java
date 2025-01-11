@@ -12,7 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "user")
+@Table(name = "user_info")
 public class User extends AuditingFields implements Serializable {
 
     @Id

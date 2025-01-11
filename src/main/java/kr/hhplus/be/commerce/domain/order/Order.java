@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@Table(name = "order")
+@Table(name = "order_info")
 public class Order extends AuditingFields implements Serializable {
 
     @Id
@@ -26,13 +26,18 @@ public class Order extends AuditingFields implements Serializable {
     @Comment("사용자 ID")
     private Long userId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    @Comment("주문 상태: PENDING, PAID, CANCELED, EXPIRED")
-    private String status;
+    @Comment("주문 상태: PENDING, PAID, CANCELED")
+    private OrderStatus status;
 
-    @Column(name = "total_amount", nullable = false)
-    @Comment("총 주문 금액")
-    private Integer totalAmount;
+    @Column(name = "order_total_amount", nullable = false)
+    @Comment("총 주문 금액 (쿠폰 적용 이전가)")
+    private Long orderTotalAmount;
+
+    @Column(name = "pay_total_amount")
+    @Comment("총 결제 금액 (쿠폰 적용가)")
+    private Long payTotalAmount;
 
     @Column(name = "order_date", nullable = false)
     @Comment("주문 날짜")
@@ -43,13 +48,25 @@ public class Order extends AuditingFields implements Serializable {
     private LocalDateTime payDate;
 
 
-    public static Order create(Long userId, String status, Integer totalAmount, LocalDateTime orderDate) {
+    public static Order create(Long userId, Long orderTotalAmount, LocalDateTime orderDate) {
         Order entity = new Order();
         entity.userId = userId;
-        entity.status = status;
-        entity.totalAmount = totalAmount;
+        entity.status = OrderStatus.PENDING;
+        entity.orderTotalAmount = orderTotalAmount;
         entity.orderDate = orderDate;
         return entity;
+    }
+
+    public void changeStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public void changePayTotalAmount(Long payTotalAmount) {
+        this.payTotalAmount = payTotalAmount;
+    }
+
+    public void changePayDate(LocalDateTime payDate) {
+        this.payDate = payDate;
     }
 
 }

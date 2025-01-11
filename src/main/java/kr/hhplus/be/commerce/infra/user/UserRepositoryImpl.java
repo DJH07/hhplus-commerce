@@ -8,5 +8,10 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
+    private final UserJpaRepository userJpaRepository;
 
+    @Override
+    public boolean existsById(Long id) {
+        return userJpaRepository.findById(id).isPresent();
+    }
 }

@@ -1,13 +1,13 @@
-package kr.hhplus.be.commerce.interfaces.dto.responseDto;
+package kr.hhplus.be.commerce.app.dto;
 
 import lombok.Builder;
 
 @Builder
 public record ProductResponse(
-        Long id,
+        Long productId,
         String name,
-        Integer price,
+        Long price,
         String description,
-        Integer stock
+        Long stock
 ) {
 }

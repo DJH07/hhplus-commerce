@@ -14,12 +14,18 @@ spring:
   jpa:
     open-in-view: false
     generate-ddl: false
-    show-sql: false
+    show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate.timezone.default_storage: NORMALIZE_UTC
       hibernate.jdbc.time_zone: UTC
+  springdoc:
+    api-docs:
+      enabled: true   # OpenAPI 문서 활성화
+    swagger-ui:
+      enabled: true   # Swagger UI 활성화
+      path: /swagger-ui.html  # Swagger UI 경로 (기본값은 swagger-ui.html)
 
 ---
 spring.config.activate.on-profile: local, test

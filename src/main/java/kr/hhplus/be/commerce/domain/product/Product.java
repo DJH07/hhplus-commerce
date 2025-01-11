@@ -27,22 +27,35 @@ public class Product extends AuditingFields implements Serializable {
 
     @Column(name = "price", nullable = false)
     @Comment("상품 가격")
-    private Integer price;
+    private Long price;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     @Comment("상품 상태")
-    private String status;
+    private ProductStatus status;
 
     @Column(name = "description", columnDefinition = "TEXT")
     @Comment("상품 설명")
     private String description;
 
-    public static Product create(String name, Integer price, String status, String description) {
+    @Column(name = "stock", nullable = false)
+    @Comment("상품 가격")
+    private Long stock;
+
+    public static Product create(String name, Long price, ProductStatus status, String description, Long stock) {
         Product entity = new Product();
         entity.name = name;
         entity.price = price;
         entity.status = status;
         entity.description = description;
+        entity.stock = stock;
         return entity;
+    }
+
+    public void changeStatus(ProductStatus status) {
+        this.status = status;
+    }
+    public void changeStock(Long stock) {
+        this.stock = stock;
     }
 }

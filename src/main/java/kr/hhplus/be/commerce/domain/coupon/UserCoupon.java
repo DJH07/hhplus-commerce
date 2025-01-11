@@ -30,43 +30,35 @@ public class UserCoupon extends AuditingFields implements Serializable {
     @Comment("쿠폰 ID")
     private Long couponId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     @Comment("쿠폰 상태 (ISSUED, USED)")
-    private String status;
+    private UserCouponStatus status;
 
     @Column(name = "issued_at")
     @Comment("쿠폰 발급 일시")
     private LocalDateTime issuedAt;
 
-    @Column(name = "start_date", nullable = false)
-    @Comment("쿠폰 활성화 시작 날짜")
-    private LocalDateTime startDate;
-
-    @Column(name = "end_date", nullable = false)
-    @Comment("쿠폰 만료 날짜")
-    private LocalDateTime endDate;
-
-    @Column(name = "used_at")
+    @Column(name = "used_at", nullable = true)
     @Comment("쿠폰 사용 일시")
     private LocalDateTime usedAt;
+
 
     public static UserCoupon create(
             Long userId,
             Long couponId,
-            String status,
-            LocalDateTime issuedAt,
-            LocalDateTime startDate,
-            LocalDateTime endDate,
-            LocalDateTime usedAt
+            UserCouponStatus status,
+            LocalDateTime issuedAt
     ) {
         UserCoupon entity = new UserCoupon();
         entity.userId = userId;
         entity.couponId = couponId;
         entity.status = status;
         entity.issuedAt = issuedAt;
-        entity.startDate = startDate;
-        entity.endDate = endDate;
-        entity.usedAt = usedAt;
         return entity;
+    }
+
+    public void changeStatus(UserCouponStatus status) {
+        this.status = status;
     }
 }

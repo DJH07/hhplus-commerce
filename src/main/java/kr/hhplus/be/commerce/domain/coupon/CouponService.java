@@ -56,6 +56,13 @@ public class CouponService {
 
     }
 
+    public Long processIssueCoupon(Long userId, Long couponId) {
+        validateCouponExpiration(couponId);
+
+        updateCouponQuantity(couponId);
+
+        return issueUserCoupon(userId, couponId);
+    }
 
     public void validateCouponExpiration(Long couponId) {
         Coupon coupon = couponRepository.findById(couponId);

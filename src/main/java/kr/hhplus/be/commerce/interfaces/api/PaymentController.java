@@ -5,8 +5,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import kr.hhplus.be.commerce.app.OrderFacade;
-import kr.hhplus.be.commerce.interfaces.dto.request.OrderRequest;
+import kr.hhplus.be.commerce.app.PaymentFacade;
+import kr.hhplus.be.commerce.domain.payment.PaymentStatus;
+import kr.hhplus.be.commerce.interfaces.dto.request.PaymentRequest;
 import kr.hhplus.be.commerce.interfaces.dto.response.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,25 +19,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/api/v1/orders")
+@RequestMapping("/api/v1/payments")
 @RequiredArgsConstructor
-public class OrderController {
+public class PaymentController {
 
-    private final OrderFacade orderFacade;
+    private final PaymentFacade paymentFacade;
 
-    @Operation(summary = "주문", description = "사용자 식별자와 상품 정보 목록을 입력받아 주문하는 API", tags = {"주문"})
+
+    @Operation(summary = "결제", description = "주문 정보를 입력 받아 주문하고 결제를 수행하는 API", tags = {"주문"})
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = ResponseDto.class)))
-    @PostMapping
-    public ResponseEntity<ResponseDto> createOrder(@Valid @RequestBody OrderRequest request) {
+    @PostMapping("/payment")
+    public ResponseEntity<ResponseDto> processPayment(@Valid @RequestBody PaymentRequest request) {
 
-        Long response = orderFacade.order(request.userId(), request.items());
+        PaymentStatus response = paymentFacade.payment(request.orderId(), request.userCouponId(), false);
 
         ResponseDto responseDto = ResponseDto.builder()
-                .message("주문이 성공적으로 처리되었습니다.")
+                .message("결제가 완료되었습니다.")
                 .data(response)
                 .build();
 
-        return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
-
 }

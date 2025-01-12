@@ -1,4 +1,4 @@
-package kr.hhplus.be.commerce.interfaces.dto.responseDto;
+package kr.hhplus.be.commerce.interfaces.dto.response;
 
 import lombok.Builder;
 

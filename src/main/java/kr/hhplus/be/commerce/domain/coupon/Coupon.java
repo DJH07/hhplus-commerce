@@ -61,6 +61,10 @@ public class Coupon extends AuditingFields implements Serializable {
     @Comment("최대 발급 가능 수")
     private Long maxIssued;
 
+    @Column(name = "coupon_quantity", nullable = false)
+    @Comment("최대 발급 가능 수")
+    private Long couponQuantity;
+
     public static Coupon create(
             String couponCode,
             String couponName,
@@ -82,6 +86,12 @@ public class Coupon extends AuditingFields implements Serializable {
         entity.startDate = startDate;
         entity.endDate = endDate;
         entity.maxIssued = maxIssued;
+        entity.couponQuantity = maxIssued;
         return entity;
     }
+
+    public void changeCouponQuantity(Long couponQuantity) {
+        this.couponQuantity = couponQuantity;
+    }
+
 }

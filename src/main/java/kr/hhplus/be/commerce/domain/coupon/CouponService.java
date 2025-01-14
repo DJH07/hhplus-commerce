@@ -13,8 +13,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CouponService {
 
-    // TODO : Coupon, UserCoupon 서비스 분리 고려.
-
     private final CouponRepository couponRepository;
     private final CouponQuantityRepository couponQuantityRepository;
     private final UserCouponRepository userCouponRepository;
@@ -27,26 +25,30 @@ public class CouponService {
         UserCoupon userCoupon = userCouponRepository.findById(userCouponId);
         Coupon coupon = couponRepository.findById(userCoupon.getCouponId());
 
-        validateUserCoupon(userCoupon, coupon, amount);
+        validateUserCoupon(coupon, userCoupon.getStatus(), amount);
 
         userCoupon.changeStatus(UserCouponStatus.USED);
 
-        // 쿠폰 연산
-        return switch (coupon.getDiscountType()) {
-            case PERCENTAGE -> amount * (100 - coupon.getDiscountValue()) / 100;
-            case AMOUNT -> amount - coupon.getDiscountValue();
+        return calculateCoupon(amount, coupon.getDiscountType(), coupon.getDiscountValue());
+    }
+
+    public Long calculateCoupon(Long amount, DiscountType discountType, Long discountValue) {
+        return switch (discountType) {
+            case PERCENTAGE -> amount * (100 - discountValue) / 100;
+            case AMOUNT -> amount - discountValue;
         };
     }
 
-    private void validateUserCoupon(UserCoupon userCoupon, Coupon coupon, Long amount) {
+    private void validateUserCoupon(Coupon coupon, UserCouponStatus userCouponStatus, Long amount) {
 
         // 쿠폰 가능 조건 검사
-        if(userCoupon.getStatus().equals(UserCouponStatus.USED)) {
+        if(userCouponStatus.equals(UserCouponStatus.USED)) {
             throw new BusinessException(BusinessErrorCode.COUPON_ALREADY_USED);
         }
         if(coupon.getMinOrderAmount() > amount) {
             throw new BusinessException(BusinessErrorCode.COUPON_MIN_ORDER_AMOUNT_NOT_MET);
         }
+
         LocalDateTime currentTime = LocalDateTime.now();
         if(coupon.getStartDate().isAfter(currentTime)) {
             throw new BusinessException(BusinessErrorCode.COUPON_NOT_YET_ACTIVE);
@@ -56,10 +58,15 @@ public class CouponService {
 
     }
 
+    @Transactional
     public Long processIssueCoupon(Long userId, Long couponId) {
         validateCouponExpiration(couponId);
 
-        updateCouponQuantity(couponId);
+        validateUserCouponIssued(userId, couponId);
+
+        Long decrementedQuantity = updateCouponQuantity(couponId);
+
+        decreaseCouponQuantity(couponId, decrementedQuantity);
 
         return issueUserCoupon(userId, couponId);
     }
@@ -71,14 +78,25 @@ public class CouponService {
         }
     }
 
-    @Transactional
-    public void updateCouponQuantity(Long couponId) {
+    public void validateUserCouponIssued(Long userId, Long couponId) {
+        if(userCouponRepository.existsByUserIdAndCouponId(userId, couponId)) {
+            throw new BusinessException(BusinessErrorCode.COUPON_ALREADY_ISSUED);
+        }
+    }
+
+    public Long updateCouponQuantity(Long couponId) {
         CouponQuantity couponQuantity = couponQuantityRepository.findByIdWithLock(couponId);
         long decrementedQuantity = couponQuantity.getRemainingQuantity() - 1;
         if(decrementedQuantity < 0) {
             throw new BusinessException(BusinessErrorCode.OUT_OF_COUPONS);
         }
         couponQuantity.changeRemainingQuantity(decrementedQuantity);
+        return decrementedQuantity;
+    }
+
+    public void decreaseCouponQuantity(Long couponId, Long decrementedQuantity) {
+        Coupon coupon = couponRepository.findById(couponId);
+        coupon.changeCouponQuantity(decrementedQuantity);
     }
 
     public Long issueUserCoupon(Long userId, Long couponId) {

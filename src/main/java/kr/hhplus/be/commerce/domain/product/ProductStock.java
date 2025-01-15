@@ -21,7 +21,7 @@ public class ProductStock extends AuditingFields implements Serializable {
     @Comment("상품 재고 ID")
     private Long productStockId;
 
-    @Column(name = "product_id", nullable = false)
+    @Column(name = "product_id", nullable = false, unique = true)
     @Comment("상품 ID")
     private Long productId;
 

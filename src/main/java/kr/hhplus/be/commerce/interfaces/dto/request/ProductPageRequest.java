@@ -12,9 +12,9 @@ public record ProductPageRequest(
         @Positive(message = "유효하지 않은 페이지 크기입니다.")
         @Schema(description = "페이지 크기")
         Integer size,
-        @NotNull(message = "페이지 호는 필수값입니다.")
-        @PositiveOrZero(message = "유효하지 않은 페이지 호입니다.")
-        @Schema(description = "페이지 호기")
+        @NotNull(message = "페이지 번호는 필수값입니다.")
+        @PositiveOrZero(message = "유효하지 않은 페이지 번호입니다.")
+        @Schema(description = "페이지 번호")
         Integer page
 ) {
 }

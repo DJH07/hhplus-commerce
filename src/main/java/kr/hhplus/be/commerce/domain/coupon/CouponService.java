@@ -100,12 +100,11 @@ public class CouponService {
     }
 
     public Long issueUserCoupon(Long userId, Long couponId) {
-        UserCoupon userCoupon = UserCoupon.create(
+        return userCouponRepository.save(UserCoupon.create(
                 userId,
                 couponId,
                 UserCouponStatus.ISSUED,
-                LocalDateTime.now());
-        return userCouponRepository.save(userCoupon);
+                LocalDateTime.now()));
     }
 
     public List<CouponResult> getUserCouponList(Long userId) {

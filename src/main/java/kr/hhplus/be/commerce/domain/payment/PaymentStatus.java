@@ -4,7 +4,7 @@ package kr.hhplus.be.commerce.domain.payment;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 주문 상태
+ * 결제 상태
  */
 @RequiredArgsConstructor
 public enum PaymentStatus {

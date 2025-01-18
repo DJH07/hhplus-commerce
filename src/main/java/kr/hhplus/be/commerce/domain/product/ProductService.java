@@ -29,10 +29,10 @@ public class ProductService {
             Product product = productRepository.findById(command.productId());
 
             Long remainingStock = decreaseStock(product.getProductId(), command.quantity());
-            product.changeStock(remainingStock);
             if(remainingStock < 1) {
                 product.changeStatus(ProductStatus.TEMPORARILY_OUT_OF_STOCK);
             }
+            product.changeStock(remainingStock);
         }
     }
 

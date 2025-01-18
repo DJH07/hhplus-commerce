@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static kr.hhplus.be.commerce.utils.TestUtils.createTestCoupon;
 import static kr.hhplus.be.commerce.utils.TestUtils.createTestUser;
@@ -59,14 +60,12 @@ class CouponFacadeIntegrationTest extends IntegrationTest {
     @DisplayName("쿠폰 발급 성공 시 UserCoupon에 정상 저장")
     void issueCoupon_ShouldReturnUserCoupon_WhenSuccessful() {
         // given
-        User user = createTestUser();
-        userJpaRepository.save(user);
+        User user = userJpaRepository.save(createTestUser());
 
-        Coupon coupon = Coupon.create(
+        Coupon coupon = couponJpaRepository.save(Coupon.create(
                 "COUPON_1", "쿠폰 1", "설명 1", DiscountType.PERCENTAGE,
                 10L, 10000L, LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(10), 100L
-        );
-        couponJpaRepository.save(coupon);
+        ));
 
         CouponQuantity couponQuantity = CouponQuantity.create(coupon.getCouponId(), 10L);
         couponQuantityJpaRepository.save(couponQuantity);
@@ -75,8 +74,9 @@ class CouponFacadeIntegrationTest extends IntegrationTest {
         Long userCouponId = couponFacade.issueCoupon(user.getUserId(), coupon.getCouponId());
 
         // then
-        UserCoupon issuedCoupon = userCouponJpaRepository.findById(userCouponId).orElse(null);
-        Assertions.assertNotNull(issuedCoupon);
+        Optional<UserCoupon> optional = userCouponJpaRepository.findById(userCouponId);
+        Assertions.assertTrue(optional.isPresent());
+        UserCoupon issuedCoupon = optional.get();
         Assertions.assertEquals(user.getUserId(), issuedCoupon.getUserId());
         Assertions.assertEquals(coupon.getCouponId(), issuedCoupon.getCouponId());
         Assertions.assertEquals(UserCouponStatus.ISSUED, issuedCoupon.getStatus());

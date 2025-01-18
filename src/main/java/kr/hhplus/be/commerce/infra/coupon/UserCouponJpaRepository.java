@@ -25,4 +25,10 @@ public interface UserCouponJpaRepository extends JpaRepository<UserCoupon, Long>
             "where uc.userId = :userId " +
             "order by uc.issuedAt desc")
     List<CouponResult> findAllByUserId(@Param("userId") Long userId);
+
+    @Query("select case when count(uc) > 0 then true else false end " +
+            "from UserCoupon uc " +
+            "where uc.userId = :userId and uc.couponId = :couponId")
+    boolean existsByUserIdAndCouponId(@Param("userId") Long userId, @Param("couponId") Long couponId);
+
 }

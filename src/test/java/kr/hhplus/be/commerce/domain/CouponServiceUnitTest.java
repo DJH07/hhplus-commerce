@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CouponServiceUnitTest {
@@ -31,6 +30,35 @@ class CouponServiceUnitTest {
 
     @InjectMocks
     private CouponService couponService;
+
+    @Test
+    @DisplayName("유효한 쿠폰이 성공적으로 적용된 경우 할인 금액 반환")
+    void applyUserCoupon_ShouldReturnDiscountedAmount_WhenCouponIsValid() {
+        // given
+        final Long userCouponId = 1L;
+        final Long amount = 10000L;
+
+        UserCoupon userCoupon = mock(UserCoupon.class);
+        when(userCoupon.getCouponId()).thenReturn(2L);
+        when(userCoupon.getStatus()).thenReturn(UserCouponStatus.ISSUED);
+
+        Coupon coupon = mock(Coupon.class);
+        when(coupon.getDiscountType()).thenReturn(DiscountType.AMOUNT);
+        when(coupon.getDiscountValue()).thenReturn(2000L);
+        when(coupon.getMinOrderAmount()).thenReturn(5000L);
+        when(coupon.getStartDate()).thenReturn(LocalDateTime.now().minusDays(1));
+        when(coupon.getEndDate()).thenReturn(LocalDateTime.now().plusDays(1));
+
+        when(userCouponRepository.findById(userCouponId)).thenReturn(userCoupon);
+        when(couponRepository.findById(2L)).thenReturn(coupon);
+
+        // when
+        Long discountedAmount = couponService.applyUserCoupon(userCouponId, amount);
+
+        // then
+        assertEquals(8000L, discountedAmount);
+        verify(userCoupon).changeStatus(UserCouponStatus.USED);
+    }
 
     @Test
     @DisplayName("쿠폰이 이미 사용된 경우 COUPON_ALREADY_USED 예외 발생")
@@ -103,28 +131,37 @@ class CouponServiceUnitTest {
 
     @Test
     @DisplayName("쿠폰이 만료된 경우 COUPON_EXPIRED 예외 발생")
-    void applyUserCoupon_ShouldThrowException_WhenCouponExpired() {
+    void validateCouponExpiration_ShouldThrowException_WhenCouponExpired() {
         // given
-        final Long userCouponId = 1L;
-        final Long amount = 10000L;
-
-        UserCoupon userCoupon = mock(UserCoupon.class);
-        when(userCoupon.getCouponId()).thenReturn(2L);
-        when(userCoupon.getStatus()).thenReturn(UserCouponStatus.ISSUED);
+        final Long couponId = 1L;
 
         Coupon coupon = mock(Coupon.class);
-        when(coupon.getStartDate()).thenReturn(LocalDateTime.now().minusDays(10));
         when(coupon.getEndDate()).thenReturn(LocalDateTime.now().minusDays(1));
-
-        when(userCouponRepository.findById(userCouponId)).thenReturn(userCoupon);
-        when(couponRepository.findById(2L)).thenReturn(coupon);
+        when(couponRepository.findById(couponId)).thenReturn(coupon);
 
         // when
         BusinessException exception = assertThrows(BusinessException.class,
-                () -> couponService.applyUserCoupon(userCouponId, amount));
+                () -> couponService.validateCouponExpiration(couponId));
 
         // then
         assertEquals(BusinessErrorCode.COUPON_EXPIRED, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("사용자가 이미 해당 쿠폰을 발급받은 경우 COUPON_ALREADY_ISSUED 예외 발생")
+    void validateUserCouponIssued_ShouldThrowException_WhenCouponAlreadyIssued() {
+        // given
+        final Long userId = 1L;
+        final Long couponId = 2L;
+
+        when(userCouponRepository.existsByUserIdAndCouponId(userId, couponId)).thenReturn(true);
+
+        // when
+        BusinessException exception = assertThrows(BusinessException.class,
+                () -> couponService.validateUserCouponIssued(userId, couponId));
+
+        // then
+        assertEquals(BusinessErrorCode.COUPON_ALREADY_ISSUED, exception.getErrorCode());
     }
 
     @Test
@@ -133,7 +170,7 @@ class CouponServiceUnitTest {
         // given
         final Long couponId = 1L;
         CouponQuantity couponQuantity = mock(CouponQuantity.class);
-        when(couponQuantity.getRemainingQuantity()).thenReturn(0L); // 재고 0
+        when(couponQuantity.getRemainingQuantity()).thenReturn(0L);
 
         when(couponQuantityRepository.findByIdWithLock(couponId)).thenReturn(couponQuantity);
 

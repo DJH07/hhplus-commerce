@@ -21,6 +21,7 @@ public enum BusinessErrorCode implements ErrorCodeEnum {
     INSUFFICIENT_BALANCE(HttpStatus.BAD_REQUEST, "잔액이 부족합니다."),
     COUPON_ALREADY_USED(HttpStatus.BAD_REQUEST, "이미 사용한 쿠폰입니다."),
     COUPON_MIN_ORDER_AMOUNT_NOT_MET(HttpStatus.BAD_REQUEST, "쿠폰 사용을 위한 최소 주문 금액을 충족하지 못했습니다."),
+    COUPON_ALREADY_ISSUED(HttpStatus.BAD_REQUEST, "이미 발급된 쿠폰입니다."),
     OUT_OF_COUPONS(HttpStatus.BAD_REQUEST, "모든 쿠폰이 소진되었습니다."),
     COUPON_NOT_YET_ACTIVE(HttpStatus.BAD_REQUEST, "쿠폰이 아직 활성화되지 않았습니다."),
     COUPON_EXPIRED(HttpStatus.BAD_REQUEST, "사용 기간이 만료된 쿠폰입니다."),

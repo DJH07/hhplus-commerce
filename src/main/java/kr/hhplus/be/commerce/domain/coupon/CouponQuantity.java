@@ -21,7 +21,7 @@ public class CouponQuantity extends AuditingFields implements Serializable {
     @Comment("쿠폰 수량 ID")
     private Long couponQuantityId;
 
-    @Column(name = "coupon_id", nullable = false)
+    @Column(name = "coupon_id", nullable = false, unique = true)
     @Comment("쿠폰 ID")
     private Long couponId;
 

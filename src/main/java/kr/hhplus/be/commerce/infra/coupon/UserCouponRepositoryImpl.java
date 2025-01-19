@@ -24,7 +24,7 @@ public class UserCouponRepositoryImpl implements UserCouponRepository {
 
     @Override
     public Long save(UserCoupon userCoupon) {
-        return userCouponJpaRepository.save(userCoupon).getCouponId();
+        return userCouponJpaRepository.save(userCoupon).getUserCouponId();
     }
 
     @Override

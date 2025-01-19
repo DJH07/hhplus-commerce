@@ -15,7 +15,14 @@ public class CouponQuantityRepositoryImpl implements CouponQuantityRepository {
     private final CouponQuantityJpaRepository couponQuantityJpaRepository;
 
     @Override
-    public CouponQuantity findByIdWithLock(Long couponId) {
+    public Long updateCouponQuantityWithLock(Long couponId) {
+        CouponQuantity couponQuantity = findByCouponIdWithLock(couponId);
+        long decrementedQuantity = couponQuantity.getRemainingQuantity() - 1;
+        couponQuantity.changeRemainingQuantity(decrementedQuantity);
+        return decrementedQuantity;
+    }
+
+    private CouponQuantity findByCouponIdWithLock(Long couponId) {
         try {
             return couponQuantityJpaRepository.findByCouponIdWithLock(couponId)
                     .orElseThrow(() -> new BusinessException(BusinessErrorCode.COUPON_QUANTITY_NOT_FOUND));

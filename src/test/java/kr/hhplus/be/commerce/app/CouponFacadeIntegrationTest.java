@@ -74,6 +74,8 @@ class CouponFacadeIntegrationTest extends IntegrationTest {
         Long userCouponId = couponFacade.issueCoupon(user.getUserId(), coupon.getCouponId());
 
         // then
+        List<UserCoupon> userCoupons = userCouponJpaRepository.findAll();
+        Assertions.assertEquals(userCoupons.size(), 1);
         Optional<UserCoupon> optional = userCouponJpaRepository.findById(userCouponId);
         Assertions.assertTrue(optional.isPresent());
         UserCoupon issuedCoupon = optional.get();

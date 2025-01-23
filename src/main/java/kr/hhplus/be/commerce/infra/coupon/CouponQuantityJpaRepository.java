@@ -18,4 +18,8 @@ public interface CouponQuantityJpaRepository extends JpaRepository<CouponQuantit
     })
     @Query("SELECT c FROM CouponQuantity c WHERE c.couponId = :couponId")
     Optional<CouponQuantity> findByCouponIdWithLock(@Param("couponId") Long couponId);
+
+
+    @Query("SELECT c FROM CouponQuantity c WHERE c.couponId = :couponId")
+    Optional<CouponQuantity> findByCouponId(@Param("couponId") Long couponId);
 }

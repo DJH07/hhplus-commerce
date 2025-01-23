@@ -30,28 +30,36 @@ dependencyManagement {
 }
 
 dependencies {
-    // Spring
+	// Spring
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("org.springframework.boot:spring-boot-starter-validation:3.4.1")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("jakarta.validation:jakarta.validation-api:3.0.0")
 
-	// swagger
+	// Swagger
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0")
 
-    // DB
+	// Redis
+	implementation("org.redisson:redisson-spring-boot-starter:3.43.0")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
+	// Database
 	runtimeOnly("com.mysql:mysql-connector-j")
 
-	annotationProcessor("org.projectlombok:lombok")
+	// Lombok
 	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
+	testCompileOnly("org.projectlombok:lombok")
+	testAnnotationProcessor("org.projectlombok:lombok")
 
-    // Test
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+	// Test
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
 	testImplementation("org.testcontainers:mysql")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
 }
 
 tasks.withType<Test> {

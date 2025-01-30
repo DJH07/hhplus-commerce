@@ -1,6 +1,5 @@
 package kr.hhplus.be.commerce.infra.coupon;
 
-import jakarta.persistence.LockTimeoutException;
 import kr.hhplus.be.commerce.domain.coupon.CouponQuantity;
 import kr.hhplus.be.commerce.domain.coupon.CouponQuantityRepository;
 import kr.hhplus.be.commerce.domain.error.BusinessErrorCode;
@@ -12,25 +11,31 @@ import org.springframework.stereotype.Repository;
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class CouponQuantityRepositoryImpl implements CouponQuantityRepository {
+public class RedisCouponQuantityRepositoryImpl implements CouponQuantityRepository {
+
 
     private final CouponQuantityJpaRepository couponQuantityJpaRepository;
 
     @Override
     public Long updateCouponQuantityWithLock(Long couponId) {
-        log.info("CouponQuantityRepositoryImpl couponId : {}", couponId);
-        CouponQuantity couponQuantity = findByCouponIdWithLock(couponId);
+        log.info("RedisCouponQuantityRepositoryImpl couponId : {}", couponId);
+
+        CouponQuantity couponQuantity = findByCouponId(couponId);
+
         long decrementedQuantity = couponQuantity.getRemainingQuantity() - 1;
+
+        if (decrementedQuantity < 0) {
+            throw new BusinessException(BusinessErrorCode.OUT_OF_COUPONS);
+        }
+
         couponQuantity.changeRemainingQuantity(decrementedQuantity);
+        couponQuantityJpaRepository.save(couponQuantity);
+
         return decrementedQuantity;
     }
 
-    private CouponQuantity findByCouponIdWithLock(Long couponId) {
-        try {
-            return couponQuantityJpaRepository.findByCouponIdWithLock(couponId)
-                    .orElseThrow(() -> new BusinessException(BusinessErrorCode.COUPON_QUANTITY_NOT_FOUND));
-        } catch (LockTimeoutException e) {
-            throw new BusinessException(BusinessErrorCode.LOCK_TIMEOUT);
-        }
+    private CouponQuantity findByCouponId(Long couponId) {
+        return couponQuantityJpaRepository.findByCouponId(couponId)
+                .orElseThrow(() -> new BusinessException(BusinessErrorCode.COUPON_QUANTITY_NOT_FOUND));
     }
 }

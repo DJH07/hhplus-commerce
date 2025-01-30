@@ -29,6 +29,11 @@ public class Balance extends AuditingFields implements Serializable {
     @Comment("금액")
     private Long amount;
 
+    @Version
+    @Column(name = "version", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+    @Comment("버전")
+    private Long version;
+
     public static Balance create(Long userId, Long amount) {
         Balance entity = new Balance();
         entity.userId = userId;

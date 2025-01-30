@@ -169,10 +169,8 @@ class CouponServiceUnitTest {
     void updateCouponQuantity_ShouldThrowException_WhenOutOfCoupons() {
         // given
         final Long couponId = 1L;
-        CouponQuantity couponQuantity = mock(CouponQuantity.class);
-        when(couponQuantity.getRemainingQuantity()).thenReturn(0L);
 
-        when(couponQuantityRepository.findByIdWithLock(couponId)).thenReturn(couponQuantity);
+        when(couponQuantityRepository.updateCouponQuantityWithLock(couponId)).thenReturn(-1L);
 
         // when
         BusinessException exception = assertThrows(BusinessException.class,

@@ -20,7 +20,6 @@ public class DistributedLockAspect {
     private static final String REDISSON_LOCK_PREFIX = "LOCK:";
 
     private final RedisLockManager redisLockManager;
-    private final AopForTransaction aopForTransaction;
 
     @Around("@annotation(kr.hhplus.be.commerce.domain.lock.DistributedLock)")
     public Object lock(ProceedingJoinPoint joinPoint) {
@@ -40,7 +39,7 @@ public class DistributedLockAspect {
                 key,
                 () -> {
                     try {
-                        return aopForTransaction.proceed(joinPoint);
+                        return joinPoint.proceed();
                     } catch (Throwable e) {
                         throw new RuntimeException(e);
                     }

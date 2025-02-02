@@ -85,10 +85,12 @@ public class CouponService {
     }
 
     public Long updateCouponQuantity(Long couponId) {
-        long decrementedQuantity = couponQuantityRepository.updateCouponQuantityWithLock(couponId);
+        CouponQuantity couponQuantity = couponQuantityRepository.findByIdWithLock(couponId);
+        long decrementedQuantity = couponQuantity.getRemainingQuantity() - 1;
         if(decrementedQuantity < 0) {
             throw new BusinessException(BusinessErrorCode.OUT_OF_COUPONS);
         }
+        couponQuantity.changeRemainingQuantity(decrementedQuantity);
         return decrementedQuantity;
     }
 

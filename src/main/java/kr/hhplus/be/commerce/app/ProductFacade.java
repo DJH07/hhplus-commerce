@@ -17,6 +17,8 @@ public class ProductFacade {
 
     private final ProductService productService;
 
+    // TODO : 상품 조회 기능 둘 다 쿼리 개선 후 캐싱
+
     @Description("상품 조회")
     public Page<ProductResponse> getProductPage(Integer size, Integer page) {
 

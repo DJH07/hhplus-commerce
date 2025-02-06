@@ -29,10 +29,10 @@ public class CouponController {
     @PostMapping("/issue")
     public ResponseEntity<?> issueCoupon(@Valid @RequestBody CouponIssueRequest request) {
 
-        Long response = couponFacade.issueCoupon(request.userId(), request.couponId());
+        couponFacade.issueCoupon(request.userId(), request.couponId());
+
         ResponseDto responseDto = ResponseDto.builder()
-                .message("쿠폰 발급이 완료되었습니다.")
-                .data(response)
+                .message("쿠폰 발급 요청하였습니다.")
                 .build();
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);

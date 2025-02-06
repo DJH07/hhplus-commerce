@@ -1,7 +1,9 @@
 package kr.hhplus.be.commerce.app;
 
 import kr.hhplus.be.commerce.app.dto.CouponResponse;
-import kr.hhplus.be.commerce.domain.coupon.*;
+import kr.hhplus.be.commerce.domain.coupon.Coupon;
+import kr.hhplus.be.commerce.domain.coupon.UserCoupon;
+import kr.hhplus.be.commerce.domain.coupon.UserCouponStatus;
 import kr.hhplus.be.commerce.domain.user.User;
 import kr.hhplus.be.commerce.utils.IntegrationTest;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static kr.hhplus.be.commerce.utils.TestUtils.createTestCoupon;
 import static kr.hhplus.be.commerce.utils.TestUtils.createTestUser;
@@ -54,35 +55,6 @@ class CouponFacadeIntegrationTest extends IntegrationTest {
             Assertions.assertEquals(coupon.getCouponName(), couponResponse.couponName());
             Assertions.assertEquals(coupon.getDescription(), couponResponse.description());
         }
-    }
-
-    @Test
-    @DisplayName("쿠폰 발급 성공 시 UserCoupon에 정상 저장")
-    void issueCoupon_ShouldReturnUserCoupon_WhenSuccessful() {
-        // given
-        User user = userJpaRepository.save(createTestUser());
-
-        Coupon coupon = couponJpaRepository.save(Coupon.create(
-                "COUPON_1", "쿠폰 1", "설명 1", DiscountType.PERCENTAGE,
-                10L, 10000L, LocalDateTime.now().minusDays(1), LocalDateTime.now().plusDays(10), 100L
-        ));
-
-        CouponQuantity couponQuantity = CouponQuantity.create(coupon.getCouponId(), 10L);
-        couponQuantityJpaRepository.save(couponQuantity);
-
-        // when
-        Long userCouponId = couponFacade.issueCoupon(user.getUserId(), coupon.getCouponId());
-
-        // then
-        List<UserCoupon> userCoupons = userCouponJpaRepository.findAll();
-        Assertions.assertEquals(userCoupons.size(), 1);
-        Optional<UserCoupon> optional = userCouponJpaRepository.findById(userCouponId);
-        Assertions.assertTrue(optional.isPresent());
-        UserCoupon issuedCoupon = optional.get();
-        Assertions.assertEquals(user.getUserId(), issuedCoupon.getUserId());
-        Assertions.assertEquals(coupon.getCouponId(), issuedCoupon.getCouponId());
-        Assertions.assertEquals(UserCouponStatus.ISSUED, issuedCoupon.getStatus());
-        Assertions.assertNotNull(issuedCoupon.getIssuedAt());
     }
 
 }

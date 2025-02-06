@@ -147,38 +147,4 @@ class CouponServiceUnitTest {
         assertEquals(BusinessErrorCode.COUPON_EXPIRED, exception.getErrorCode());
     }
 
-    @Test
-    @DisplayName("사용자가 이미 해당 쿠폰을 발급받은 경우 COUPON_ALREADY_ISSUED 예외 발생")
-    void validateUserCouponIssued_ShouldThrowException_WhenCouponAlreadyIssued() {
-        // given
-        final Long userId = 1L;
-        final Long couponId = 2L;
-
-        when(userCouponRepository.existsByUserIdAndCouponId(userId, couponId)).thenReturn(true);
-
-        // when
-        BusinessException exception = assertThrows(BusinessException.class,
-                () -> couponService.validateUserCouponIssued(userId, couponId));
-
-        // then
-        assertEquals(BusinessErrorCode.COUPON_ALREADY_ISSUED, exception.getErrorCode());
-    }
-
-    @Test
-    @DisplayName("쿠폰 재고가 부족한 경우 OUT_OF_COUPONS 예외 발생")
-    void updateCouponQuantity_ShouldThrowException_WhenOutOfCoupons() {
-        // given
-        final Long couponId = 1L;
-        CouponQuantity couponQuantity = mock(CouponQuantity.class);
-        when(couponQuantity.getRemainingQuantity()).thenReturn(0L);
-        when(couponQuantityRepository.findByIdWithLock(couponId)).thenReturn(couponQuantity);
-
-        // when
-        BusinessException exception = assertThrows(BusinessException.class,
-                () -> couponService.updateCouponQuantity(couponId));
-
-        // then
-        assertEquals(BusinessErrorCode.OUT_OF_COUPONS, exception.getErrorCode());
-    }
-
 }

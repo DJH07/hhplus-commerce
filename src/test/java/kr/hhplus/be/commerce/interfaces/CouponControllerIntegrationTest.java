@@ -78,7 +78,7 @@ class CouponControllerIntegrationTest extends WebIntegrationTest {
     }
 
     @Test
-    @DisplayName("정상적인 사용자 ID와 쿠폰 ID로 쿠폰 발급 성공")
+    @DisplayName("정상적인 사용자 ID와 쿠폰 ID로 쿠폰 발급 신청")
     void issueCoupon_ShouldReturnSuccess_WhenValidRequest() throws Exception {
         // given
         User user = userJpaRepository.save(createTestUser());
@@ -97,7 +97,7 @@ class CouponControllerIntegrationTest extends WebIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk()) // 200 OK
-                .andExpect(jsonPath("$.message").value("쿠폰 발급이 완료되었습니다."));
+                .andExpect(jsonPath("$.message").value("쿠폰 발급 요청하였습니다."));
     }
 
     @Test

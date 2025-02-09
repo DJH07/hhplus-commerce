@@ -4,7 +4,6 @@ import kr.hhplus.be.commerce.domain.error.BusinessErrorCode;
 import kr.hhplus.be.commerce.domain.error.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,6 +13,7 @@ import java.util.List;
 public class CouponService {
 
     private final CouponRepository couponRepository;
+    private final CouponRedisRepository couponRedisRepository;
     private final CouponQuantityRepository couponQuantityRepository;
     private final UserCouponRepository userCouponRepository;
 
@@ -58,17 +58,23 @@ public class CouponService {
 
     }
 
-    @Transactional
-    public Long processIssueCoupon(Long userId, Long couponId) {
+    public void requestIssueCoupon(Long userId, Long couponId) {
+
         validateCouponExpiration(couponId);
 
-        validateUserCouponIssued(userId, couponId);
+        enqueueCouponRequest(userId, couponId);
+    }
 
-        Long decrementedQuantity = updateCouponQuantity(couponId);
+    void enqueueCouponRequest(Long userId, Long couponId) {
+        couponRedisRepository.enqueueCouponRequest(userId, couponId);
+    }
 
-        decreaseCouponQuantity(couponId, decrementedQuantity);
+    public Long dequeueCouponRequest(Long couponId) {
+        return couponRedisRepository.dequeueCouponRequest(couponId);
+    }
 
-        return issueUserCoupon(userId, couponId);
+    public List<Long> getAllCouponIds() {
+        return couponRedisRepository.getAllCouponIds();
     }
 
     public void validateCouponExpiration(Long couponId) {
@@ -78,31 +84,32 @@ public class CouponService {
         }
     }
 
-    public void validateUserCouponIssued(Long userId, Long couponId) {
-        if(userCouponRepository.existsByUserIdAndCouponId(userId, couponId)) {
-            throw new BusinessException(BusinessErrorCode.COUPON_ALREADY_ISSUED);
+    public boolean tryIssueCoupon(Long userId, Long couponId, Long maxIssued) {
+        Long issuedCount = couponRedisRepository.getIssuedCouponCount(couponId);
+
+        if (issuedCount > maxIssued) {
+            return false;
         }
+
+        couponRedisRepository.markCouponAsIssued(userId, couponId);
+        return true;
     }
 
-    public Long updateCouponQuantity(Long couponId) {
-        long decrementedQuantity = couponQuantityRepository.updateCouponQuantityWithLock(couponId);
-        if(decrementedQuantity < 0) {
-            throw new BusinessException(BusinessErrorCode.OUT_OF_COUPONS);
-        }
-        return decrementedQuantity;
+
+    public Long getIssuedCouponCount(Long couponId) {
+        return couponRedisRepository.getIssuedCouponCount(couponId);
     }
 
-    public void decreaseCouponQuantity(Long couponId, Long decrementedQuantity) {
-        Coupon coupon = couponRepository.findById(couponId);
-        coupon.changeCouponQuantity(decrementedQuantity);
+    public Long getMaxIssued(Long couponId) {
+        return couponRepository.findById(couponId).getMaxIssued();
     }
 
-    public Long issueUserCoupon(Long userId, Long couponId) {
-        return userCouponRepository.save(UserCoupon.create(
-                userId,
-                couponId,
-                UserCouponStatus.ISSUED,
-                LocalDateTime.now()));
+    public void insertUserCouponList(List<Long> userIds, Long couponId) {
+        List<UserCoupon> userCoupons = userIds.stream()
+                .map(userId -> UserCoupon.create(userId, couponId, UserCouponStatus.ISSUED, LocalDateTime.now()))
+                .toList();
+
+        userCouponRepository.saveAll(userCoupons);
     }
 
     public List<CouponResult> getUserCouponList(Long userId) {

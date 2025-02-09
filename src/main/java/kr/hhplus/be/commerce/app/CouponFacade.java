@@ -2,7 +2,6 @@ package kr.hhplus.be.commerce.app;
 
 import kr.hhplus.be.commerce.app.dto.CouponResponse;
 import kr.hhplus.be.commerce.domain.coupon.CouponService;
-import kr.hhplus.be.commerce.domain.lock.DistributedLock;
 import kr.hhplus.be.commerce.domain.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,12 +16,11 @@ public class CouponFacade {
     private final UserService userService;
 
 
-    @DistributedLock(key = "'coupon:quantity:' + #couponId")
-    public Long issueCoupon(Long userId, Long couponId) {
+    public void issueCoupon(Long userId, Long couponId) {
 
         userService.checkUserExists(userId);
 
-        return couponService.processIssueCoupon(userId, couponId);
+        couponService.requestIssueCoupon(userId, couponId);
 
     }
 

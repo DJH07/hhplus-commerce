@@ -10,4 +10,6 @@ public interface UserCouponRepository {
     List<CouponResult> findAllByUserId(Long userId);
 
     boolean existsByUserIdAndCouponId(Long userId, Long couponId);
+
+    void saveAll(List<UserCoupon> userCouponList);
 }

@@ -24,20 +24,15 @@ public interface ProductJpaRepository extends JpaRepository<Product, Long> {
             "from Product p")
     Page<ProductResult> findAllProductResults(Pageable pageable);
 
-    @Query("select " +
-            "new kr.hhplus.be.commerce.domain.product.TopProductResult(" +
-            "p.productId, " +
-            "p.name, " +
-            "p.price, " +
-            "p.description, " +
-            "SUM(oi.quantity)) " +
-            "from Product p " +
-            "left join OrderItem oi on oi.productId = p.productId " +
-            "left join Order o on o.orderId = oi.orderId " +
-            "where o.status = :status " +
-            "and o.payDate between :startDate and :endDate " +
-            "group by p.productId " +
-            "order by SUM(oi.quantity) desc")
+    @Query(" SELECT new kr.hhplus.be.commerce.domain.product.TopProductResult( " +
+            "p.productId, p.name, p.price, p.description, SUM(oi.quantity)) " +
+            "FROM Product p " +
+            "LEFT JOIN OrderItem oi ON oi.productId = p.productId " +
+            "LEFT JOIN Order o ON o.orderId = oi.orderId " +
+            "WHERE o.status = :status " +
+            "AND o.payDate BETWEEN :startDate AND :endDate " +
+            "GROUP BY p.productId, p.name, p.price, p.description " +
+            "ORDER BY SUM(oi.quantity) DESC")
     List<TopProductResult> findTopProducts(@Param("status") OrderStatus status,
                                            @Param("startDate") LocalDateTime startDate,
                                            @Param("endDate") LocalDateTime endDate,
